@@ -24,6 +24,7 @@ class OlxSpiderSpider(scrapy.Spider):
         # yield scrapy.Request(url=_start_urls[0], callback=self.parse)       
         # url = 'https://sp.olx.com.br/sao-paulo-e-regiao/animais-de-estimacao/cachorros'
         url = 'https://sp.olx.com.br/animais-de-estimacao/cachorros'
+        #url = 'https://www.olx.com.br/autos-e-pecas/carros-vans-e-utilitarios'
 
         yield scrapy.Request(url=url, callback=self.parse_category_page)
         
@@ -66,13 +67,21 @@ class OlxSpiderSpider(scrapy.Spider):
             type  = ad.xpath(xtype)[i].css('::text').get()
             place  = ad.xpath(xplace)[i].css('::text').get()
 
+            #data
+            # ano = 2022
+            # dia = response.css('.jvuXUB::text')[1].get()[:2]
+            # mes = response.css('.jvuXUB::text')[1].get()[3:5]
+            # ad_date = data = f'{ano}-{mes}-{dia}'
+            ad_date = 'NA'
+
             yield {
                 'id': id,
                 'link': link,
                 'title': title,
                 'type': type,
                 'place': place,
-                'price': price
+                'price': price,
+                'ad_date': ad_date
             }
 
         # next page (if avaiable)

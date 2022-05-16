@@ -1,4 +1,5 @@
-/.vscode
-/olx_2021.csv
-/olx_2022.csv
-/olx_old.csv
+*.csv
+*.json
+*.jl
+**/__pycache__
+.vscode
