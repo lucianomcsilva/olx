@@ -15,7 +15,6 @@ NEWSPIDER_MODULE = 'olx.spiders'
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
 # USER_AGENT = 'olx (+http://www.yourdomain.com)'
-USER_AGENT = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/93.0.4577.82 Safari/537.36'
 
 # Obey robots.txt rules
 ROBOTSTXT_OBEY = False
@@ -88,3 +87,24 @@ HTTPCACHE_ENABLED = False
 #HTTPCACHE_DIR = 'httpcache'
 #HTTPCACHE_IGNORE_HTTP_CODES = []
 #HTTPCACHE_STORAGE = 'scrapy.extensions.httpcache.FilesystemCacheStorage'
+DOWNLOAD_HANDLERS = {
+    "http": "scrapy_playwright.handler.ScrapyPlaywrightDownloadHandler",
+    "https": "scrapy_playwright.handler.ScrapyPlaywrightDownloadHandler",
+}
+TWISTED_REACTOR = "twisted.internet.asyncioreactor.AsyncioSelectorReactor"
+
+DOWNLOAD_TIMEOUT = 90
+PLAYWRIGHT_DEFAULT_NAVIGATION_TIMEOUT = 1000 * DOWNLOAD_TIMEOUT 
+
+PLAYWRIGHT_BROWSER_TYPE = "firefox"
+PLAYWRIGHT_MAX_CONTEXTS = 4
+
+def should_abort_request(request):
+    return (
+        any(resource_type in request.resource_type for resource_type in ('image', 'font', 'stylesheet', '.css', '.jpg', '.jpeg', '.png'))
+    ) #font or stylesheet
+
+PLAYWRIGHT_ABORT_REQUEST = should_abort_request
+
+LOG_FORMATTER = "olx.QuietLogFormatter.QuietLogFormatter"
+LOG_SCRAPED_ITEMS = False

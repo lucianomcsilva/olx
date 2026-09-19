@@ -1,0 +1,4 @@
+.vscode/**
+tricarros/__pycache__/**
+tricarros_commons/**/*
+tricarros_commons/

@@ -1,0 +1,10 @@
+.vscode/**
+olx/__pycache__/**
+tricarros_commons/**/*
+tricarros_commons/
+venv/**
+venv/
+data/**
+data/
+logs
+logs/**

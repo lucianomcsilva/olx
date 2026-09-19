@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <!-- Get things done -->
+    <meta http-equiv='refresh' content='5' />
+    <title>Tricarros Webcrawler Monitor</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+
+    <style>
+        body {
+            font-family: Arial, Helvetica, sans-serif;            
+        }
+
+        h1 {
+            text-align:center;
+            margin-top:5em;
+            padding:10px;
+        }
+        h1 span {
+            font-weight: bold;
+            font-size: 48px;            
+            text-align:center;
+            
+        }
+        .color1 { color:#647C9C}
+        .color2 { color:#9C6498}
+        .color3 { color:#9C8564}
+        .color4 { color:#649C6C}
+        form {
+            text-align: center;
+        }
+        a {
+            background-color: #647C9C;
+            color: #fff;
+            padding-left: 20px;
+            padding-right: 20px;
+            padding-top: 7px;
+            padding-bottom: 7px;
+            font-size: 18px;
+            font-weight: bold;
+            border-radius: 0.3em;
+            margin:10px;
+            display: inline-block;
+        }
+        a:hover {
+            background-color: hsl(214, 21%, 23%);
+            color: #fff;
+            cursor: pointer;
+        }
+    </style>
+        
+</head>
+<body>    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+    <script>
+        const popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]')
+        const popoverList = [...popoverTriggerList].map(popoverTriggerEl => new bootstrap.Popover(popoverTriggerEl))        
+    </script>
+    <div class='container'>
+        <h1>Welcome to <span class='color1'>Tri</span><span class='color2'>carros </span><span class='color3'>Web</span><span class='color4'>crawler</span></h1>
+        <form  action='/' method="POST" class="row g-2" style="width:35em; margin:auto;">  
+            <select onchange="(window.location = '/' + this.options[this.selectedIndex].value);" class="form-select">
+                <option>Choose other session to see its status</option>
+                {% for session_item in sessions %}
+                <option value="{{session_item["id"]}}" {% if session_item["id"] == current_session %} selected {% endif %}>{{session_item["timestamp"]}} ({{session_item["id"]}})</option>
+                {% endfor %}                
+              </select>
+        </form>
+        <hr style="margin:1em">
+        <div class="container"> 
+            <!-- Data -->
+            <h2>You are at session {{current_session}}</h2>
+            <p>there are {{workers|count }} workers running in session {{current_session}}.</p>
+            <p>There are a total of {{summary["total"]}} being crawled. {{summary["OK"]}} treated and {{summary["pending"]}} to go.</p>
+            {% for worker in workers %}
+            <div class="container">            
+                <!-- h3 sytle="margin:2em">Worker #{{worker["id"]}}</h3 -->
+                <div class="container">
+                    <div style="float:left; width:120px;">
+                        <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseWorker{{worker["id"]}}" aria-expanded="false" aria-controls="collapseWorker{{worker["id"]}}">
+                            Worker {{worker["id"]}}
+                        </button>
+                    </div>
+                    <div>
+                        <div class="progress" role="progressbar" aria-label="Example with label" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100" style="height: 38px; margin-top: 10px;">
+                            <div class="progress-bar progress-bar-striped progress-bar-animated" style="width:  {{worker["data"]["percentage"]}}%">{{worker["data"]["percentage"]}}% ({{worker["data"]["remaining_crawling_time"]}})</div>
+                        </div>   
+                    </div>
+                    <div style="clear:both"></div>
+                </div>                             
+                <div class="collapse" id="collapseWorker{{worker["id"]}}">
+                    <div class="card card-body">
+                        {{worker["pre"]}}
+                    </div>
+                </div>                
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</body>
+</html>

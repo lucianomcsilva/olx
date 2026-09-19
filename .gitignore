@@ -3,3 +3,9 @@
 *.jl
 **/__pycache__
 .vscode
+data
+venv/**
+venv/
+tricarros_commons/
+tricarros_commons/**
+/logs/**
